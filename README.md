@@ -252,3 +252,5 @@ This approach gives you more control and allows you to schedule other coroutines
 ## About
 
 The `uht` library started as a fork of [tinyweb](https://github.com/belyalov/tinyweb) by [Konstantin Belyalov](https://github.com/belyalov). Over time the library was pretty much completely rewritten.
+
+The full diff (before the first commit on this repo) can be found [here](https://github.com/nmattia/tinyweb-ng/compare/7669f03cdcbb62a847e7d4917673be52ad2f7e79..e11bd40756669dc48ad34b56a4be8e6b8e6bbb9e).
