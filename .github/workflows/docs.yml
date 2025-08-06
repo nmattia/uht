@@ -1,0 +1,48 @@
+# Simple workflow for deploying static content to GitHub Pages
+# Adapted from https://github.com/actions/deploy-pages/blob/b74272834adc04f971da4b0b055c49fa8d7f90c9/README.md#usage
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes
+  push:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build the docs and save as artifacts
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: |
+          pip3 install pdoc==15.0.4 strip-hints==0.1.13
+          make docs
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist/docs'
+
+  # Single deploy job since we're just deploying
+  deploy:
+    needs: build
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

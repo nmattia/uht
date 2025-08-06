@@ -1,0 +1,25 @@
+name: Run the tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run linters
+        run: |
+          pip3 install \
+            -U micropython-rp2-rpi_pico2_w-stubs==1.25.0.post3 \
+            --target=./.typings
+          pip3 install mypy==1.16.1 ruff==0.12.1
+          make lint
+
+      - name: Run tests
+        run: |
+          pip3 install \
+            strip-hints==0.1.13 \
+            mpy-cross==1.25.0.post2
+          make build
+          make test

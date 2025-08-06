@@ -1,0 +1,75 @@
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>uht Static content example</title>
+
+        <!-- uht styles -->
+        <style type="text/css">
+body {
+    max-width: 60em;
+    margin: auto;
+    background: antiquewhite;
+    font-family: 'system-ui';
+}
+        </style>
+
+    </head>
+
+    <body>
+
+
+        <main role="main" class="container" id="status">
+            <h1>uht — hot MicroPython HTTP Toolkit </h1>
+
+            <section>
+                <h2>Machine</h2>
+                <ul id="machine-data"></ul>
+            </section>
+            <section>
+                <h2>GPIO</h2>
+                <ul id="pins"></ul>
+            </section>
+            <button onclick="refresh()">Refresh</button>
+
+        </main>
+
+
+        <script>
+            async function refresh() {
+                const pinsElem = document.querySelector("#pins");
+                pinsElem.innerHTML = '';
+                let response = await (await fetch("/pins/")).json();
+                for (const pin of response['pins']) {
+                    const li = document.createElement("li");
+                    const btn = document.createElement("button");
+                    btn.innerText = "toggle";
+                    btn.onclick = () => toggle(pin);
+                    li.innerText = pin;
+                    li.append(btn);
+                    pinsElem.append(li);
+                }
+
+                response = await (await fetch("/info")).json();
+                const ul = document.querySelector("#machine-data");
+                ul.innerHTML = '';
+                for (const kv of response) {
+                    const li = document.createElement("li");
+                    li.innerText = kv['title'] + ": " + kv['value'];
+                    ul.append(li);
+                }
+            }
+
+            async function toggle(pin) {
+                const _ = await fetch(`/pins/${pin}/toggle`, { method: "POST" });
+            }
+            window.addEventListener("load", () => refresh());
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,24 @@
+[tool.mypy]
+files=["uht.py", "test", "examples/webapp.py"]
+python_version = "3.12" # micropython is ~3.5 but mypy doesn't support that
+strict_equality = true
+
+# override known (CPython)stubs
+mypy_path = ".typings"
+custom_typeshed_dir = ".typings"
+
+# copied from micropython-stubs
+follow_imports = "silent"
+follow_imports_for_stubs = true
+no_site_packages = true
+explicit_package_bases = true
+
+# check everything even if unannotated
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["logging", "gc", "unittest"]
+ignore_missing_imports = true
+
+[tool.ruff]
+include = [ "uht.py", "test/unit.py", "examples/webapp.py" ]
