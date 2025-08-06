@@ -1,5 +1,5 @@
 """
-Minimal HTTP server for MicroPython and CircuitPython.
+Minimal HTTP server for MicroPython and CircuitPython: `nmattia/uht <https://github.com/nmattia/uht>`_
 
 Supports HTTP/1.0 request parsing, routing based on method and path, and response generation using asyncio streams.
 
