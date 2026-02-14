@@ -1,4 +1,4 @@
-.PHONY: container build test install clean deps
+.PHONY: build test install clean deps
 
 .DEFAULT_GOAL := build
 
@@ -7,6 +7,8 @@ OUTDIR ?= ./dist
 DOCSDIR := $(OUTDIR)/docs
 SERVER_PY := $(OUTDIR)/uht.py
 SERVER_MPY := $(OUTDIR)/uht.mpy
+# marker for image used in tests
+CONTAINER_IID := $(OUTDIR)/container_iid
 
 # install pip dependencies
 deps:
@@ -24,8 +26,9 @@ $(SERVER_PY): ./uht.py
 $(SERVER_MPY): $(SERVER_PY)
 	mpy-cross $(SERVER_PY)
 
-container: Dockerfile
-	$(DOCKER) build . -t uht
+$(CONTAINER_IID): Dockerfile
+	# the container tag is not strictly necessary but shows image origin
+	$(DOCKER) build . -t uht-test-container --iidfile $(CONTAINER_IID)
 
 # Install the non-compiled server to the connected board
 install: $(SERVER_PY)
@@ -43,14 +46,14 @@ test: $(SERVER_PY) install
 	# run the unit tests
 	mpremote run ./test/unit.py
 else
-test: build container
+test: build $(CONTAINER_IID)
 	# run with the local uht added to the default search path
 	# https://docs.micropython.org/en/latest/unix/quickref.html#envvar-MICROPYPATH
 	$(DOCKER) run --rm \
 		-v ./test:/opt/uht-test \
 		-v $(OUTDIR):/remote \
 		-e MICROPYPATH='/remote:.frozen:/root/.micropython/lib:/usr/lib/micropython' \
-		uht micropython /opt/uht-test/unit.py
+		`cat $(CONTAINER_IID)` micropython /opt/uht-test/unit.py
 endif
 
 lint: ./uht.py
