@@ -27,7 +27,7 @@ def wait_for_http(origin):
         # curl will return !0 if the connection itself fails.
         # If it gets a response, regardless of the HTTP code, it
         # returns 0.
-        result = subprocess.run(["curl", origin + "/not-found"])
+        result = subprocess.run(["curl", "--silent", origin + "/not-found"])
         if result.returncode == 0:
             print(f"connected to {origin}")
             return

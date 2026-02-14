@@ -63,7 +63,7 @@ MPY_RUN_CMD += -w /mnt/uht `cat $(CONTAINER_IID)` micropython
 test: build $(CONTAINER_IID)
 	$(MPY_RUN_CMD) ./tests/unit.py
 	MPY_RUN_CMD="$(MPY_RUN_CMD)" MPY_ORIGIN="0.0.0.0:8080" python3 ./tests/e2e.py
-	@tput bold; tput setaf 2; echo SUCCESS; tput sgr0
+	@tput -T xterm-256color bold; tput -T xterm-256color setaf 2; echo SUCCESS; tput -T xterm-256color sgr0
 endif
 
 lint: ./uht.py
