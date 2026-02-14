@@ -6,7 +6,6 @@ MIT license
 (C) Konstantin Belyalov 2017-2018
 """
 
-import os
 import gc
 import unittest
 import asyncio
@@ -17,16 +16,6 @@ from uht import (
     _parse_request_line,
     _match_url_paths,
 )
-
-
-# Helper to delete file
-def delete_file(fn):
-    # "unlink" gets renamed to "remove" in micropython,
-    # so support both
-    if hasattr(os, "unlink"):
-        os.unlink(fn)
-    else:
-        os.remove(fn)
 
 
 # HTTP headers helpers
