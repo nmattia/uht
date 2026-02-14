@@ -60,6 +60,19 @@ esptool write-flash --flash-size=detect 0 ./ESP8266_GENERIC-20250415-v1.25.0.bin
 
 </details>
 
+<details><summary><h4>Install MicroPython on ESP32-C3</h4></summary>
+
+```bash
+pip3 install esptool==5.0.1
+esptool erase-flash
+curl -LO https://micropython.org/resources/firmware/ESP32_GENERIC_C3-20250415
+v1.25.0.bin
+esptool write-flash --flash-size=detect 0 ./ESP32_GENERIC_C3-20250415-v1.25.0
+bin
+```
+
+</details>
+
 <details><summary><h4>Install MicroPython on ESP32-C6</h4></summary>
 
 ```bash
