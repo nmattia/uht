@@ -1,5 +1,5 @@
 [tool.mypy]
-files=["uht.py", "test", "examples/webapp.py"]
+files=["uht.py", "tests", "examples/webapp.py"]
 python_version = "3.12" # micropython is ~3.5 but mypy doesn't support that
 strict_equality = true
 
@@ -21,4 +21,4 @@ module = ["logging", "gc", "unittest"]
 ignore_missing_imports = true
 
 [tool.ruff]
-include = [ "uht.py", "test/unit.py", "examples/webapp.py" ]
+include = [ "uht.py", "tests/unit.py", "examples/webapp.py" ]

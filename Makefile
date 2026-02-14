@@ -44,13 +44,13 @@ test: $(SERVER_PY) install
 	# install unittest unless if it's not there
 	mpremote ls :/lib/unittest || mpremote mip install unittest
 	# run the unit tests
-	mpremote run ./test/unit.py
+	mpremote run ./tests/unit.py
 else
 test: build $(CONTAINER_IID)
 	# run with the local uht added to the default search path
 	# https://docs.micropython.org/en/latest/unix/quickref.html#envvar-MICROPYPATH
 	$(DOCKER) run --rm \
-		-v ./test:/opt/uht-test \
+		-v ./tests:/opt/uht-test \
 		-v $(OUTDIR):/remote \
 		-e MICROPYPATH='/remote:.frozen:/root/.micropython/lib:/usr/lib/micropython' \
 		`cat $(CONTAINER_IID)` micropython /opt/uht-test/unit.py
