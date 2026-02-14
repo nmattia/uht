@@ -23,13 +23,13 @@ container: Dockerfile
 	$(DOCKER) build . -t uht
 
 test: build container
-	# run with the local uht mounted to the default search path
+	# run with the local uht added to the default search path
 	# https://docs.micropython.org/en/latest/unix/quickref.html#envvar-MICROPYPATH
 	$(DOCKER) run --rm \
 		-v ./test:/opt/uht-test \
 		-v $(OUTDIR):/remote \
-		uht \
-		bash -c 'mkdir -p /root/.micropython/lib && cp -r /remote/. /root/.micropython/lib/ && micropython /opt/uht-test/unit.py'
+		-e MICROPYPATH='/remote:.frozen:/root/.micropython/lib:/usr/lib/micropython' \
+		uht micropython /opt/uht-test/unit.py
 
 lint: ./uht.py
 	ruff check
