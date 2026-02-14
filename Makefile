@@ -46,14 +46,24 @@ test: $(SERVER_PY) install
 	# run the unit tests
 	mpremote run ./tests/unit.py
 else
+
+# For non-board tests, start a unix micropython container, and run both unit and e2e tests.
+
+# ephemeral container
+MPY_RUN_CMD := $(DOCKER) run --rm
+# mount PWD and dist dir
+MPY_RUN_CMD += -v $(PWD):/mnt/uht:ro -v $(OUTDIR):/mnt/dist:ro
+# add locally built uht to the default search path
+MPY_RUN_CMD += -e MICROPYPATH='/mnt/dist:.frozen:/root/.micropython/lib:/usr/lib/micropython'
+# e2e tests require an open port
+MPY_RUN_CMD += -p 8080:80
+# set workdir to PWD and start container
+MPY_RUN_CMD += -w /mnt/uht `cat $(CONTAINER_IID)` micropython
+
 test: build $(CONTAINER_IID)
-	# run with the local uht added to the default search path
-	# https://docs.micropython.org/en/latest/unix/quickref.html#envvar-MICROPYPATH
-	$(DOCKER) run --rm \
-		-v ./tests:/opt/uht-test \
-		-v $(OUTDIR):/remote \
-		-e MICROPYPATH='/remote:.frozen:/root/.micropython/lib:/usr/lib/micropython' \
-		`cat $(CONTAINER_IID)` micropython /opt/uht-test/unit.py
+	$(MPY_RUN_CMD) ./tests/unit.py
+	MPY_RUN_CMD="$(MPY_RUN_CMD)" MPY_ORIGIN="0.0.0.0:8080" python3 ./tests/e2e.py
+	@tput bold; tput setaf 2; echo SUCCESS; tput sgr0
 endif
 
 lint: ./uht.py

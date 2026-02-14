@@ -1,5 +1,6 @@
 [tool.mypy]
-files=["uht.py", "tests", "examples/webapp.py"]
+# we focus on mpy and avoid the python3 modules
+files=["uht.py", "tests/unit.py", "examples/webapp.py"]
 python_version = "3.12" # micropython is ~3.5 but mypy doesn't support that
 strict_equality = true
 
@@ -21,4 +22,4 @@ module = ["logging", "gc", "unittest"]
 ignore_missing_imports = true
 
 [tool.ruff]
-include = [ "uht.py", "tests/unit.py", "examples/webapp.py" ]
+include = [ "uht.py", "tests/unit.py", "tests/e2e.py", "examples/webapp.py" ]
