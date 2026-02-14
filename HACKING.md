@@ -54,7 +54,7 @@ esptool write-flash --flash-size=detect 0 ./ESP8266_GENERIC-20250415-v1.25.0.bin
 
 ```bash
 pip3 install esptool==5.0.1
-esptool erase_flash
+esptool erase-flash
 curl -LO https://micropython.org/resources/firmware/ESP32_GENERIC_C6-20250415-v1.25.0.bin
 esptool write-flash --flash-size=detect 0 ./ESP32_GENERIC_C6-20250415-v1.25.0.bin
 ```
