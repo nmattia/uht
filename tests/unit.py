@@ -252,7 +252,7 @@ class TestHTTPServer(unittest.TestCase):
     PORT = 8081
 
     def setUp(self):
-        self.server = HTTPServer()
+        self.app = HTTPServer()
         gc.collect()
 
     def assertRequestResponse(self, req, expected):
@@ -260,8 +260,8 @@ class TestHTTPServer(unittest.TestCase):
         port = TestHTTPServer.PORT
 
         async def send_request():
-            server = await self.server.start(host=host, port=port)
-            async with server:
+            app = await self.app.start(host=host, port=port)
+            async with app:
                 resp = await send_raw_request(host, port, req)
 
             return resp
@@ -285,7 +285,7 @@ class TestHTTPServer(unittest.TestCase):
         self.assertRequestResponse(request, lambda resp: resp.startswith("HTTP/1.0"))
 
     def test_http_reason_phrase(self):
-        @self.server.route("/")
+        @self.app.route("/")
         async def teapot(req, resp):
             resp.set_status_code(418)
             resp.set_reason_phrase("I'm a teapot")
@@ -298,7 +298,7 @@ class TestHTTPServer(unittest.TestCase):
         self.assertRequestResponse("GET / HTTP/1.1\r\n\r\n", b"HTTP/1.0 404 \r\n\r\n")
 
     def test_get(self):
-        @self.server.route("/")
+        @self.app.route("/")
         async def hello(req, resp):
             await resp.send("hello")
 
@@ -307,7 +307,7 @@ class TestHTTPServer(unittest.TestCase):
         )
 
     def test_method_not_allowed(self):
-        @self.server.route("/")
+        @self.app.route("/")
         async def hello(req, resp):
             await resp.send("hello")
 
@@ -319,7 +319,7 @@ class TestHTTPServer(unittest.TestCase):
         )
 
     def test_empty_response_body(self):
-        @self.server.route("/")
+        @self.app.route("/")
         async def hello(req, resp):
             pass
 
@@ -393,19 +393,19 @@ class HTTPServerFull(unittest.TestCase):
     def testOverlappingPaths(self):
         """Tests that the same path may be registered multiple times."""
 
-        server = HTTPServer()
+        app = HTTPServer()
 
-        @server.route("/", methods=["GET"])
+        @app.route("/", methods=["GET"])
         async def get(req, resp):
             await resp.send("hi from GET")
 
-        @server.route("/", methods=["POST"])
+        @app.route("/", methods=["POST"])
         async def post(req, resp):
             await resp.send("hi from POST")
 
         rdr = mockReader(["GET / HTTP/1.1\r\n", HDRE])
         wrt = mockWriter()
-        asyncio.run(server._handle_connection(rdr, wrt))
+        asyncio.run(app._handle_connection(rdr, wrt))
         expected = (
             "HTTP/1.0 200 \r\n"
             "\r\n"
@@ -416,7 +416,7 @@ class HTTPServerFull(unittest.TestCase):
 
         rdr = mockReader(["POST / HTTP/1.1\r\n", HDRE])
         wrt = mockWriter()
-        asyncio.run(server._handle_connection(rdr, wrt))
+        asyncio.run(app._handle_connection(rdr, wrt))
         expected = (
             "HTTP/1.0 200 \r\n"
             "\r\n"

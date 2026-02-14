@@ -7,13 +7,13 @@ Example:
 ```python
 import uht
 
-server = uht.HTTPServer()
+app = uht.HTTPServer()
 
-@server.route("/hello/<name>")
+@app.route("/hello/<name>")
 async def greet(req, resp, name):
     await resp.send("Hello, " + name)
 
-server.run()
+app.run()
 ```
 
 See the main :class:`HTTPServer` class for details.

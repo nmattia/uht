@@ -124,14 +124,14 @@ Finally, start the server:
 ```python
 import uht
 
-server = uht.HTTPServer()
+app = uht.HTTPServer()
 
-@server.route("/hello/<name>")
+@app.route("/hello/<name>")
 async def greet(req, resp, name):
     await resp.send(f"Hello, {name}!\n")
     await resp.send("Greetings from your board.\n")
 
-server.run()
+app.run()
 ```
 
 You should now be able to reach your board from any device connected to your WiFi using the IP address looked up above:
