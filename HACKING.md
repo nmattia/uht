@@ -27,6 +27,12 @@ Optionally build the docs:
 make docs
 ```
 
+Serve the docs:
+
+```
+python3 -m http.server -d ./dist/docs
+```
+
 ## Install uht on a board
 
 First MicroPython (or CircuitPython) needs to be installed on your board. Then the dependencies need to be installed. Then you can install `uht`.
