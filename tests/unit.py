@@ -258,11 +258,9 @@ class TestHTTPServer(unittest.TestCase):
     def assertRequestResponse(self, req, expected):
         host = TestHTTPServer.HOST
         port = TestHTTPServer.PORT
-        aaserver = self.server.start(host=host, port=port)
 
         async def send_request():
-            aserver = await aaserver
-            server = await aserver
+            server = await self.server.start(host=host, port=port)
             async with server:
                 resp = await send_raw_request(host, port, req)
 

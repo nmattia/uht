@@ -31,7 +31,7 @@ import errno
 # TYPING_START
 # typing related lines that get stripped during build
 # (micropython doesn't support them)
-from typing import Callable, TypedDict, Literal, Any, Coroutine
+from typing import Callable, TypedDict, Literal
 
 # As per https://www.rfc-editor.org/rfc/rfc9112.html#name-request-line
 RequestLine = TypedDict(
@@ -608,11 +608,10 @@ class HTTPServer:
 
         This is a coroutine.
         """
-        aserver = await self.start(host, port)
-        server = await aserver
+        server = await self.start(host, port)
         await server.wait_closed()
 
-    async def start(self, host, port) -> Coroutine[Any, Any, asyncio.Server]:
+    async def start(self, host, port) -> asyncio.Server:
         """
         Start the server and return the asyncio.Server instance.
 
@@ -623,6 +622,6 @@ class HTTPServer:
         Returns:
             An asyncio.Server instance.
         """
-        return asyncio.start_server(
+        return await asyncio.start_server(
             self._handle_connection, host, port, backlog=self._backlog
         )
