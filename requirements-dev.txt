@@ -1,0 +1,10 @@
+# Linter dependencies
+mypy==1.16.1
+ruff==0.12.1
+
+# Build dependencies
+strip-hints==0.1.13
+mpy-cross==1.25.0.post2
+
+# Docs dependencies
+pdoc==15.0.4

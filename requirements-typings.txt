@@ -1,0 +1,2 @@
+micropython-rp2-rpi_pico2_w-stubs==1.25.0.post3
+

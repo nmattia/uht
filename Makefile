@@ -1,4 +1,4 @@
-.PHONY: container build test clean
+.PHONY: container build test clean deps
 
 .DEFAULT_GOAL := build
 
@@ -7,6 +7,11 @@ OUTDIR ?= ./dist
 DOCSDIR := $(OUTDIR)/docs
 SERVER_PY := $(OUTDIR)/uht.py
 SERVER_MPY := $(OUTDIR)/uht.mpy
+
+# install pip dependencies
+deps:
+	pip3 install -r requirements-dev.txt
+	pip3 install -r requirements-typings.txt --target=./.typings --upgrade
 
 build: $(SERVER_MPY) $(SERVER_PY)
 
