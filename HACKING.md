@@ -66,30 +66,12 @@ esptool write-flash --flash-size=detect 0 ./ESP32_GENERIC_C6-20250415-v1.25.0.bi
 </details>
 
 
-### Installing dependencies
-
-Install the `logging` library with the following command:
-
-```bash
-mpremote mip install logging
-```
-
 ### Install uht
 
-Build the `uht` library with the following commands:
+Build and install the `uht` library to the board connected via USB:
 
 ```bash
-mpremote mkdir :/lib || true
-make ./dist/uht.py
-mpremote cp ./dist/uht.py :/lib/uht.py
-```
-
-Run the example webapp:
-
-```bash
-mpremote mkdir :/srv || true
-mpremote cp ./examples/static/index.html :/srv/index.html
-mpremote run ./examples/webapp.py
+make install
 ```
 
 Run the tests in docker:
@@ -102,9 +84,16 @@ Run the tests on a board:
 
 > [!NOTE]
 >
-> End-to-end tests fail on the rp2 platform.
+> Tests fail on the rp2 platform.
 
 ```
-mpremote mip install unittest
-mpremote run ./test/unit.py
+make TEST_TARGET=board test
+```
+
+Run the example webapp:
+
+```bash
+mpremote ls :/srv || mpremote mkdir :/srv
+mpremote cp ./examples/static/index.html :/srv/index.html
+mpremote run ./examples/webapp.py
 ```

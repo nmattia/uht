@@ -1,4 +1,4 @@
-.PHONY: container build test clean deps
+.PHONY: container build test install clean deps
 
 .DEFAULT_GOAL := build
 
@@ -27,6 +27,22 @@ $(SERVER_MPY): $(SERVER_PY)
 container: Dockerfile
 	$(DOCKER) build . -t uht
 
+# Install the non-compiled server to the connected board
+install: $(SERVER_PY)
+	mpremote ls :/lib || mpremote mkdir :/lib
+	# note: mpremote ls fails on non-dirs so we use sha256sum to check for existence
+	mpremote sha256sum :/lib/logging.mpy || mpremote mip install logging
+	mpremote cp $(SERVER_PY) :/lib/uht.py
+
+# Conditional 'test' Make target. If the TEST_TARGET option is set to 'board', then use mpremote
+# and run the tests on whatever board is connected. Otherwise, run in the Unix port.
+ifeq ($(TEST_TARGET),board)
+test: $(SERVER_PY) install
+	# install unittest unless if it's not there
+	mpremote ls :/lib/unittest || mpremote mip install unittest
+	# run the unit tests
+	mpremote run ./test/unit.py
+else
 test: build container
 	# run with the local uht added to the default search path
 	# https://docs.micropython.org/en/latest/unix/quickref.html#envvar-MICROPYPATH
@@ -35,6 +51,7 @@ test: build container
 		-v $(OUTDIR):/remote \
 		-e MICROPYPATH='/remote:.frozen:/root/.micropython/lib:/usr/lib/micropython' \
 		uht micropython /opt/uht-test/unit.py
+endif
 
 lint: ./uht.py
 	ruff check
