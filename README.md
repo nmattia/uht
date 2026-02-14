@@ -37,7 +37,7 @@ app = HTTPServer()
 async def index(req, resp):
     await resp.send(b"Hello, world!")
 
-app.run()  # Starts the server on 127.0.0.1:8081
+app.run()  # Starts the server on port 80
 ```
 
 See the [Getting Started](#getting-started) and [Examples](#examples) sections below for more information and refer to the [documentation](https://nmattia.github.io/uht/) for all options.
@@ -137,7 +137,7 @@ server.run()
 You should now be able to reach your board from any device connected to your WiFi using the IP address looked up above:
 
 ```bash
-$ curl http://192.168.1.120:8080/hello/alice
+$ curl http://192.168.1.120/hello/alice
 Hello, alice!
 Greetings from your board.
 ```
@@ -146,7 +146,7 @@ Greetings from your board.
 
 ### Basic Hello World
 
-Serve a simple "Hello, world!" response on `http://127.0.0.1:8081/`:
+Serve a simple "Hello, world!" response on port 80:
 
 ```python
 from uht import HTTPServer
@@ -157,7 +157,7 @@ app = HTTPServer()
 async def index(req, resp):
     await resp.send(b"Hello, world!")
 
-app.run()  # Defaults to 127.0.0.1:8081
+app.run()  # Defaults to port 80
 ```
 
 ### Route with Parameter
@@ -173,7 +173,7 @@ async def greet(req, resp, name):
 The parameter is now echoed in the response:
 
 ```bash
-$ curl http://127.0.0.1:8081/hello/Alice
+$ curl http://127.0.0.1/hello/Alice
 Hello, Alice!
 ```
 
@@ -237,8 +237,8 @@ async def index(req, resp):
     await resp.send(b"Hello from async start")
 
 async def main():
-    server = app.start("0.0.0.0", 8081)
-    print("Server started on port 8081")
+    server = app.start()
+    print("Server started on port 80")
 
     # Optionally do other async tasks here
     await server.wait_closed()  # Wait until the server shuts down

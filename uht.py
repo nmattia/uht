@@ -13,7 +13,7 @@ server = uht.HTTPServer()
 async def greet(req, resp, name):
     await resp.send("Hello, " + name)
 
-server.run("0.0.0.0", 8080)
+server.run()
 ```
 
 See the main :class:`HTTPServer` class for details.
@@ -415,13 +415,13 @@ class HTTPServer:
         self._routes: list[Route] = []
         self._catch_all_handler = None
 
-    def run(self, host="127.0.0.1", port=8081):
+    def run(self, host="0.0.0.0", port=80):
         """
         Start the HTTP server (blocking) on the specified host and port and run forever.
 
         Parameters:
-            host: Interface to bind to (default "127.0.0.1").
-            port: Port number to listen on (default 8081).
+            host: Interface to bind to (default "0.0.0.0").
+            port: Port number to listen on (default 80).
         """
         asyncio.run(self.arun(host, port))
 
@@ -598,7 +598,7 @@ class HTTPServer:
 
         return _route
 
-    async def arun(self, host="127.0.0.1", port=8081):
+    async def arun(self, host, port):
         """
         Asynchronously start the server and wait for it to close.
 
