@@ -116,3 +116,13 @@ mpremote ls :/srv || mpremote mkdir :/srv
 mpremote cp ./examples/static/index.html :/srv/index.html
 mpremote run ./examples/webapp.py
 ```
+
+### Releasing uht
+
+This is currently a very manual process.
+
+1. Go to the [Releases](https://github.com/nmattia/uht/releases) page
+2. Click "Draft a new release"
+3. "Select Tag" -> "Create new tag"
+3. Locally run `make build` and upload artifacts
+4. Click "Publish release"
